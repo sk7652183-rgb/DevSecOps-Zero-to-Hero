@@ -50,7 +50,7 @@
 
 ---
 
-## Day 4: Container & Kubernetes Security
+## Day 4: Container Security
 
 **Focus**: Securing the ship (Docker) and the harbor (K8s).
 
@@ -69,7 +69,21 @@
 
 ---
 
-## Day 5: Dynamic Testing (DAST) & API Security
+## Day 5: Kubernetes Security
+
+**Focus**: TBD
+
+### Concepts:
+- TBD
+
+### Tool Spotlight:
+- TBD
+
+### Hands-on Lab:
+- TBD
+---
+
+## Day 6: Dynamic Testing (DAST) & API Security
 
 **Focus**: Testing the running application for real-world exploits.
 
@@ -85,24 +99,6 @@
 ### Hands-on Lab:
 - Run an automated ZAP baseline scan against a running staging environment
 - Generate a PDF report
-
----
-
-## Day 6: Runtime Security & Compliance as Code
-
-**Focus**: Monitoring what happens AFTER deployment and staying compliant.
-
-### Concepts:
-- **Runtime Security**: Detecting drift and suspicious behavior (e.g., a shell opening in a container)
-- **eBPF**: The secret sauce of modern cloud-native security
-- **Compliance** (SOC2/GDPR) as an automated check
-
-### Tool Spotlight:
-- Falco (Runtime Detection)
-- Prowler (AWS/Azure/GCP Auditing)
-
-### Hands-on Lab:
-- Set up Falco to alert on Slack whenever someone runs `apt-get install` inside a production container
 
 ---
 
