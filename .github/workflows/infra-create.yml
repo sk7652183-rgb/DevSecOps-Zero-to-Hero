@@ -1,31 +1,33 @@
-name: Terraform Deployment
-on: [push]
-
-permissions:
-  id-token: write
-  contents: read
-
 jobs:
-  deploy:
+  terraform:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./terraform
-
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
-      - name: Fetch Keys from Vault
+      - name: Start Vault Dev Server
+        run: |
+          docker run -d --name vault -p 8200:8200 vault:1.15.5 server -dev -dev-root-token-id=root
+
+      - name: Wait for Vault
+        run: |
+          for i in {1..10}; do
+            curl --silent --fail http://127.0.0.1:8200/v1/sys/health && break
+            echo "Waiting for Vault..."
+            sleep 2
+          done
+
+      - name: Login to Vault
         uses: hashicorp/vault-action@v3
         with:
           url: http://127.0.0.1:8200
-          role: gh-actions-role
-          method: jwt
+          method: token
+          token: root
           secrets: |
-            aws/creds/terraform-role access_key | AWS_ACCESS_KEY_ID ;
-            aws/creds/terraform-role secret_key | AWS_SECRET_ACCESS_KEY
+            secret/data/aws terraform-access-key | AWS_ACCESS_KEY_ID
+            secret/data/aws terraform-secret-key | AWS_SECRET_ACCESS_KEY
+          exportEnv: true
 
-      - uses: hashicorp/setup-terraform@v3
-      - run: terraform init
-      - run: terraform plan
-      - run: terraform apply -auto-approve
+      - name: Terraform Init & Apply
+        run: |
+          terraform init
+          terraform apply -auto-approve
